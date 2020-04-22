@@ -1,0 +1,77 @@
+---
+title: "붓꽃 데이터를 통한 Blogdown 헬로월드"
+author:
+    name: "[Tidyverse Korea](https://www.facebook.com/groups/tidyverse/)"
+date: "`r Sys.Date()`"
+output:
+  html_document: 
+    toc: yes
+    toc_float: true
+    highlight: tango
+    code_folding: show
+    number_section: true
+    self_contained: true
+editor_options: 
+  chunk_output_type: console
+categories: ["R"]
+tags: ["R Markdown", "붓꽃", "blogdown", "헬로월드", "모형"]
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, message=FALSE, warning=FALSE,
+                      comment="", digits = 3, tidy = FALSE, prompt = FALSE, 
+                      fig.align = 'center')
+library(tidyverse)
+library(extrafont)
+loadfonts()
+```
+
+# 붓꽃(iris) 데이터 분석 [^blog-reference]
+
+[^blog-reference]: [붓꽃 데이터를 통한 Blogdown 헬로월드](http://xwmooc.netlify.com/2017/09/13/%EB%B6%93%EA%BD%83-%EB%8D%B0%EC%9D%B4%ED%84%B0%EB%A5%BC-%ED%86%B5%ED%95%9C-blogdown-%ED%97%AC%EB%A1%9C%EC%9B%94%EB%93%9C/)
+
+붗꽃 데이터 분석을 통해서 통계분석 보고서에서 자주 활용되는 기능을 점검한다.
+
+- 데이터 가져오기
+- 데이터 살펴보기
+- 모형적합
+- 시각화
+- 자바스크립트 라이브러리: DT
+
+# 기능 점검 
+
+데이터 가져오기와 데이터 살펴보고 모형접합 및 모형 살펴보기.
+
+
+```{r iris}
+iris_df <- read_csv("data/iris.csv")
+
+DT::datatable(iris_df)
+
+summary(iris_df)
+```
+
+# 시각화 그래프
+
+`ggplot` 시각화 팩키지를 통해 시각화 기능을 점검하고 한글에 대한 지원도 함게 점검한다.
+
+```{r iris-viz, fig.cap='붓꽃 데이터 시각화', tidy=FALSE}
+
+ggplot(iris_df, aes(x=sepal.length, y=sepal.width, color=variety)) +
+  geom_point(size=2) +
+  theme_light(base_size=16, base_family="NanumGothic") + 
+  labs(x="꽃받침 길이", y="꽃받침 폭", title="꽃받침 길이와 폭")
+```
+
+# 모형
+
+```{r iris-model}
+
+iris_df <- iris_df %>% 
+    mutate(variety = factor(variety))
+
+iris_rf <- randomForest::randomForest(variety ~ ., data = iris_df, importance = TRUE)
+randomForest::importance(iris_rf)
+
+randomForest::varImpPlot(iris_rf)
+```
