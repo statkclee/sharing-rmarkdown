@@ -29,3 +29,7 @@ loadfonts()
 # `.yml` 파일의 힘
 
 - [`iris` 블로그](iris.html)
+
+# R 콘텐츠 공유 
+
+![](fig/sharing-yml.png)
